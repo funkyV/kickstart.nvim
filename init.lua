@@ -163,10 +163,6 @@ require('lazy').setup({
     },
   },
 
-  { -- Add format on Save
-    'lukas-reineke/lsp-format.nvim',
-  },
-
   -- "gc" to comment visual regions/lines
   {
     'numToStr/Comment.nvim',
@@ -201,7 +197,7 @@ require('lazy').setup({
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
-  -- require 'kickstart.plugins.autoformat',
+  require 'kickstart.plugins.autoformat',
   -- require 'kickstart.plugins.debug',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
@@ -301,6 +297,8 @@ vim.keymap.set('n', '<leader>/', function()
   require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
     winblend = 10,
     previewer = false,
+    layout_strategy = 'vertical',
+    layout_config = { width = 0.7, height = 0.7 },
   })
 end, { desc = '[/] Fuzzily search in current buffer' })
 
@@ -428,8 +426,6 @@ local on_attach = function(_, bufnr)
   end, { desc = 'Format current buffer with LSP' })
 end
 
-require('lsp-format').setup()
-
 -- Enable the following language servers
 --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
 --
@@ -472,10 +468,7 @@ mason_lspconfig.setup_handlers {
   function(server_name)
     require('lspconfig')[server_name].setup {
       capabilities = capabilities,
-      on_attach = function(a, b)
-        on_attach(a, b)
-        require('lsp-format').on_attach(a, b)
-      end,
+      on_attach = on_attach,
       settings = servers[server_name],
       filetypes = (servers[server_name] or {}).filetypes,
     }
