@@ -128,8 +128,9 @@ require('lazy').setup({
       end,
     },
   },
-
+  
   {
+    -- Theme
     'catppuccin/nvim',
     name = 'catppuccin',
     priority = 1000,
